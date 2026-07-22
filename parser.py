@@ -15,6 +15,12 @@ def parse(line):
         if m:
             return {'cmd': 'INSERT', 'table': m.group(1), 'values': [x.strip().strip('"') for x in m.group(2).split(',')]}
 
+    if line.upper() == 'SAVE':
+        return {'cmd': 'SAVE'}
+
+    if line.upper() == 'LOAD':
+        return {'cmd': 'LOAD'}
+
     if ':' in line and '(' in line and ')' in line:
         table, rest = line.split(':', 1)
         fields_part, rest = rest.split('(', 1)
