@@ -1,112 +1,77 @@
- mc-lang
+# MicroCode (MC)
 
-The shortest and most secure query language
+**The shortest and most secure query language**
 
- Install
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.6+](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI version](https://badge.fury.io/py/mc-lang.svg)](https://badge.fury.io/py/mc-lang)
 
+---
+
+## Quick Start
+
+### Install
 ```bash
 pip install mc-lang
 ```
-Usage
-```bash
-micro data.mc
-```
-Example
+
+### Create `data.mc`
 ```mc
 CREATE users (id INT, name STRING, age INT, city STRING)
 +users {1, "Alex", 28, "Moscow"}
-users:name,age(city="Moscow")50
-```
-License
-```Text
-
-**Commit new file**
-
----
-
-### 4. Файл: `data.mc`
-
-**Name your file:** `data.mc`
-```
-CREATE users (id INT, name STRING, age INT, city STRING)
-+users {1, "Alex", 28, "Moscow"}
 +users {2, "Kate", 22, "SPB"}
-+users {3, "John", 35, "Moscow"}
-+users {4, "Anna", 19, "SPB"}
-users:name,age()50
+users:name,age(city="Moscow")50
 ```
 
-**Commit new file**
+### Run
+```bash
+micro data.mc
+```
+
+### Output
+```
++--------+-----+
+| name   | age |
++--------+-----+
+| Alex   | 28  |
+| John   | 35  |
++--------+-----+
+```
 
 ---
 
-### 5. Файл: `examples.mc`
+## Why MicroCode?
 
-**Name your file:** `examples.mc`
-```
-users:name,age(city="Moscow")50
-users:name,age(age>25)50
-users:city="London"(id=1)
--users(id=4)!
-users#
-### 6. Файл: `parser.py`
+| SQL | MicroCode | Shorter by |
+|-----|-----------|------------|
+| `SELECT name, age FROM users WHERE city="Moscow" LIMIT 50` | `users:name,age(city="Moscow")50` | **3x** |
+| `INSERT INTO users VALUES(1,'Alex',28)` | `+users {1, "Alex", 28}` | **2x** |
 
-**Name your file:** `parser.py`
+---
 
-```python
-import re
+## Security
 
-def parse(cmd):
-    cmd = cmd.strip()
-    
-    match = re.match(r'^([a-z]+):([a-z,]+)\((.+)\)(\d+)$', cmd)
-    if match:
-        return {
-            'command': 'SELECT',
-            'table': match.group(1),
-            'fields': match.group(2).split(','),
-            'condition': match.group(3),
-            'limit': int(match.group(4))
-        }
-    
-    match = re.match(r'^\+([a-z]+)\s*\{(.+)\}$', cmd)
-    if match:
-        return {
-            'command': 'INSERT',
-            'table': match.group(1),
-            'values': [x.strip() for x in match.group(2).split(',')]
-        }
-    
-    match = re.match(r'^([a-z]+):([a-z]+)="(.+)"\((.+)\)$', cmd)
-    if match:
-        return {
-            'command': 'UPDATE',
-            'table': match.group(1),
-            'field': match.group(2),
-            'value': match.group(3),
-            'condition': match.group(4)
-        }
-    
-    match = re.match(r'^-([a-z]+)\((.+)\)!$', cmd)
-    if match:
-        return {
-            'command': 'DELETE',
-            'table': match.group(1),
-            'condition': match.group(2)
-        }
-    
-    match = re.match(r'^([a-z]+)#$', cmd)
-    if match:
-        return {
-            'command': 'COUNT',
-            'table': match.group(1)
-        }
-    
-    return {'error': 'Unknown command'}
+- Auto-limit (no infinite queries)
+- DELETE requires `!`
+- UPDATE requires condition
+- No `SELECT *`
+- No SQL injection
 
-if __name__ == "__main__":
-    print(parse("users:name,age(city=\"Moscow\")50"))
-```
+---
 
-Commit new file
+## Files
 
+- `micro` — CLI command
+- `microcode/` — Python package
+- `parser.py` — standalone parser
+- `data.mc` — example data
+
+---
+
+##  License
+
+MIT © 2026 rostichar1-hue
+
+---
+
+**Star if you like it!**
