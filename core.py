@@ -1,6 +1,5 @@
-cat > microcode/core.py << 'EOF'
-from .parser import parse
-from .executor import execute
+from parser import parse
+from executor import execute
 
 def run_file(filename):
     with open(filename) as f:
@@ -11,4 +10,3 @@ def run_file(filename):
         cmd = parse(line)
         out.append(execute(cmd) if cmd else f"Unknown: {line}")
     return '\n'.join(out)
-EOF
