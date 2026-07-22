@@ -2,7 +2,7 @@ import json
 from tabulate import tabulate
 
 tables = {}
-DATA_FILE = 'microcode_data.json'
+DATA_FILE = 'micql_data.json'
 
 def save_data():
     with open(DATA_FILE, 'w') as f:
