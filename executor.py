@@ -26,8 +26,12 @@ def execute(cmd):
 
     if cmd['cmd'] == 'INSERT':
         row = {}
+        fields = cmd.get('fields', [f'col{i+1}' for i in range(len(cmd['values']))])
         for i, val in enumerate(cmd['values']):
-            row[f'col{i+1}'] = val
+            if i < len(fields):
+                row[fields[i]] = val
+            else:
+                row[f'col{i+1}'] = val
         tables[cmd['table']]['rows'].append(row)
         save_data()
         return f"Inserted into '{cmd['table']}'"
@@ -35,8 +39,7 @@ def execute(cmd):
     if cmd['cmd'] == 'SELECT':
         rows = tables.get(cmd['table'], {}).get('rows', [])
         if rows:
-            headers = list(rows[0].keys())
-            return tabulate(rows, headers=headers, tablefmt='grid')
+            return tabulate(rows, headers='keys', tablefmt='grid')
         return "No data"
 
     if cmd['cmd'] == 'SAVE':
