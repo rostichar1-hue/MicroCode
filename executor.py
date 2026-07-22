@@ -1,4 +1,6 @@
+cat > ~/MicroCode/executor.py << 'EOF'
 import json
+import asyncio
 from tabulate import tabulate
 
 tables = {}
@@ -20,7 +22,7 @@ def load_data():
 
 def execute(cmd):
     if cmd['cmd'] == 'CREATE':
-        tables[cmd['table']] = {'rows': []}
+        tables[cmd['table']] = {'rows': [], 'indexes': {}}
         save_data()
         return f"Table '{cmd['table']}' created"
 
@@ -49,3 +51,14 @@ def execute(cmd):
         return load_data()
 
     return "Unknown command"
+
+# Асинхронная версия (как Go goroutines)
+async def async_select(table, condition):
+    await asyncio.sleep(0)
+    return execute({'cmd': 'SELECT', 'table': table, 'condition': condition})
+
+def parallel_queries(queries):
+    loop = asyncio.new_event_loop()
+    tasks = [async_select(q['table'], q['condition']) for q in queries]
+    return loop.run_until_complete(asyncio.gather(*tasks))
+EOF
