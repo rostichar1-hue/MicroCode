@@ -1,4 +1,4 @@
-# MicroCode (MC)
+# MicQL
 
 **The shortest and most secure query language**
 
