@@ -1,4 +1,4 @@
-```markdown
+
 # Micql — Minimalistic Query Language
 
 Micql (pronounced "my-queue-l") is a query language that is 3–5 times shorter than SQL.  
