@@ -59,8 +59,7 @@ LOAD
 ```bash
 git clone https://github.com/rostichar1-hue/Micql.git
 cd Micql
-./install.sh
-source ~/.bashrc
+
 ```
 
 ---
